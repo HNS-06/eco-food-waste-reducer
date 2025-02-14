@@ -1,4 +1,4 @@
-const API_KEY = "4c137389c1ea478e9c1383eda254250e";//update api key
+const API_KEY = "c9070602d11e40438b03a6e53688cae8";//update api key
 
 // Fetch recipes based on ingredients
 async function getRecipes() {
