@@ -1,4 +1,13 @@
-const API_KEY = "c9070602d11e40438b03a6e53688cae8";//update api key
+const API_KEY = "c9070602d11e40438b03a6e53688cae8"; // Update API key
+
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById("darkModeToggle");
+darkModeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    darkModeToggle.innerHTML = document.body.classList.contains("dark-mode")
+        ? '<i class="fas fa-sun"></i> Light Mode'
+        : '<i class="fas fa-moon"></i> Dark Mode';
+});
 
 // Fetch recipes based on ingredients
 async function getRecipes() {
@@ -9,7 +18,6 @@ async function getRecipes() {
     }
 
     const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${foodInput}&number=20&addRecipeInformation=true&apiKey=${API_KEY}`;
-
     fetchRecipes(apiUrl);
 }
 
@@ -22,45 +30,42 @@ async function getCuisineRecipes() {
     }
 
     const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${selectedCountry}&number=20&addRecipeInformation=true&apiKey=${API_KEY}`;
-
     fetchRecipes(apiUrl);
 }
 
-// Fetch only vegetable-based recipes
-async function getVegetableRecipes() {
+// Fetch only vegetarian recipes
+async function getVegetarianRecipes() {
     const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?diet=vegetarian&number=20&addRecipeInformation=true&apiKey=${API_KEY}`;
-
     fetchRecipes(apiUrl);
 }
 
 // Fetch only non-vegetarian recipes
 async function getNonVegetarianRecipes() {
     const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?excludeIngredients=tofu,lentils,beans,peas&number=20&addRecipeInformation=true&apiKey=${API_KEY}`;
-
     fetchRecipes(apiUrl);
 }
 
 // Fetch a random recipe
 async function getRandomRecipe() {
     const apiUrl = `https://api.spoonacular.com/recipes/random?number=1&addRecipeInformation=true&apiKey=${API_KEY}`;
-
     fetchRecipes(apiUrl);
 }
 
 // Function to fetch and display recipes
 async function fetchRecipes(apiUrl) {
     try {
-        document.getElementById("recipes").innerHTML = "<p>Loading recipes...</p>"; // Show loading message
+        const recipesDiv = document.getElementById("recipes");
+        recipesDiv.innerHTML = `<div class="loading-spinner"></div><p>Loading recipes...</p>`;
 
         const response = await fetch(apiUrl);
         const data = await response.json();
 
         if (!data || data.length === 0 || (!data.results && !data.recipes)) {
-            document.getElementById("recipes").innerHTML = "<p>No recipes found. Try different inputs.</p>";
+            recipesDiv.innerHTML = "<p>No recipes found. Try different inputs.</p>";
             return;
         }
 
-        const recipeData = data.results || data.recipes; // Handle both cases
+        const recipeData = data.results || data.recipes;
         displayRecipes(recipeData);
     } catch (error) {
         console.error("Error fetching recipes:", error);
@@ -80,22 +85,22 @@ function displayRecipes(recipes) {
             <img src="${recipe.image}" alt="${recipe.title}">
             <h3>${recipe.title}</h3>
             <p><strong>Time:</strong> ${recipe.readyInMinutes} minutes</p>
-            <p>${recipe.summary.replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100)}...</p>
+            <p>${recipe.summary.replace(/<\/?[^>]+(>|$)/g, "").slice(0, 150)}...</p>
             <a href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a>
         `;
         recipesDiv.appendChild(recipeElement);
     });
-
 }
+
+// Service Worker for caching
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open('v1').then(cache => {
             return cache.addAll([
                 '/',
                 '/index.html',
-                '/css/styles.css',
-                '/js/script.js',
-                // Add other assets to cache
+                '/styles.css',
+                '/script.js',
             ]);
         })
     );
