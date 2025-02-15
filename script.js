@@ -1,4 +1,4 @@
-const API_KEY = "c9070602d11e40438b03a6e53688cae8"; // Update API key
+const API_KEY = "4e34d540a2454ee8823e30d9e3e351ab"; // Update API key
 
 // Dark Mode Toggle
 const darkModeToggle = document.getElementById("darkModeToggle");
