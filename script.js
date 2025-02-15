@@ -69,24 +69,24 @@ async function fetchRecipes(apiUrl) {
 }
 
 // Function to display recipes
-// function displayRecipes(recipes) {
-//     const recipesDiv = document.getElementById("recipes");
-//     recipesDiv.innerHTML = "";
+function displayRecipes(recipes) {
+    const recipesDiv = document.getElementById("recipes");
+    recipesDiv.innerHTML = "";
 
-//     recipes.forEach(recipe => {
-//         const recipeElement = document.createElement("div");
-//         recipeElement.classList.add("recipe-card");
-//         recipeElement.innerHTML = `
-//             <img src="${recipe.image}" alt="${recipe.title}">
-//             <h3>${recipe.title}</h3>
-//             <p><strong>Time:</strong> ${recipe.readyInMinutes} minutes</p>
-//             <p>${recipe.summary.replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100)}...</p>
-//             <a href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a>
-//         `;
-//         recipesDiv.appendChild(recipeElement);
-//     });
+    recipes.forEach(recipe => {
+        const recipeElement = document.createElement("div");
+        recipeElement.classList.add("recipe-card");
+        recipeElement.innerHTML = `
+            <img src="${recipe.image}" alt="${recipe.title}">
+            <h3>${recipe.title}</h3>
+            <p><strong>Time:</strong> ${recipe.readyInMinutes} minutes</p>
+            <p>${recipe.summary.replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100)}...</p>
+            <a href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a>
+        `;
+        recipesDiv.appendChild(recipeElement);
+    });
 
-// }
+}
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open('v1').then(cache => {
@@ -100,41 +100,6 @@ self.addEventListener('install', event => {
         })
     );
 });
-// Function to display recipes with instructions
-function displayRecipes(recipes) {
-    const recipesDiv = document.getElementById("recipes");
-    recipesDiv.innerHTML = "";
-
-    recipes.forEach(recipe => {
-        const recipeElement = document.createElement("div");
-        recipeElement.classList.add("recipe-card");
-        
-        // Build instructions HTML if available
-        let instructionsHtml = "<p>No instructions available.</p>";
-        if (recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0) {
-            instructionsHtml = `
-                <div class="instructions">
-                    <h4>Instructions:</h4>
-                    <ol>
-                        ${recipe.analyzedInstructions[0].steps.map(step => 
-                            `<li>${step.step.replace(/<\/?[^>]+(>|$)/g, "")}</li>`
-                        ).join('')}
-                    </ol>
-                </div>
-            `;
-        }
-
-        recipeElement.innerHTML = `
-            <img src="${recipe.image}" alt="${recipe.title}">
-            <h3>${recipe.title}</h3>
-            <p><strong>Time:</strong> ${recipe.readyInMinutes} minutes</p>
-            <p>${recipe.summary.replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100)}...</p>
-            ${instructionsHtml}
-            <a href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a>
-        `;
-        recipesDiv.appendChild(recipeElement);
-    });
-}
 
 self.addEventListener('fetch', event => {
     event.respondWith(
